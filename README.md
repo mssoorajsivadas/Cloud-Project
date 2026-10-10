@@ -1,6 +1,6 @@
 # Aerial Cloud
 
-A learning cloud-drive web application built with Flask, SQLAlchemy, SQLite, HTML, CSS and JavaScript.
+A cloud-drive web application built with Flask, SQLAlchemy, SQLite, HTML, CSS and JavaScript.
 
 ## Current Features
 

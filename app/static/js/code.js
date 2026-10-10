@@ -1,3 +1,22 @@
+/* ===========================# Drive State #=========================== */
+
+let currentFolderId = null;
+let folderHistory = [];
+
+let selectedFolder = null;
+let selectedFile = null;
+
+let modalMode = "create";
+let deleteMode = null;
+
+let copyDestinationId = null;
+let copyDestinationHistory = [];
+let copyItemType = null;
+
+let moveDestinationId = null;
+let moveDestinationHistory = [];
+let moveItemType = null;
+
 /* ===========================# User info Page #=========================== */
 
 const welcome = document.getElementById("welcome");
@@ -21,6 +40,32 @@ if (welcome) {
             console.error("Failed to load user information:",
                 error);
         });
+}
+
+/* ===========================# Logout Page #=========================== */
+
+const logoutButton = document.getElementById("logout-button");
+
+if (logoutButton) {
+
+    logoutButton.addEventListener("click", async function () {
+
+        const response = await fetch("/api/auth/logout", {
+
+            method: "POST"
+
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            window.location.href = "/signin";
+
+        }
+
+    });
+
 }
 
 /* ===========================# Activity Check Page #=========================== */
@@ -76,24 +121,6 @@ setInterval(async () => {
 
 }, ACTIVITY_INTERVAL);
 
-/* ===========================# Drive State #=========================== */
-
-let currentFolderId = null;
-let folderHistory = [];
-
-let selectedFolder = null;
-let selectedFile = null;
-
-let modalMode = "create";
-let deleteMode = null;
-
-let copyDestinationId = null;
-let copyDestinationHistory = [];
-let copyItemType = null;
-
-let moveDestinationId = null;
-let moveDestinationHistory = [];
-let moveItemType = null;
 
 /* ===========================# Save Navigation State #===========================# */
 
@@ -142,6 +169,30 @@ function restoreFolderNavigation() {
 
         loadFolders(null);
     }
+}
+
+/* ===========================# Back Button #=========================== */
+
+const backButton = document.getElementById("back-button");
+
+if (backButton) {
+
+    backButton.addEventListener("click", () => {
+
+
+        if (folderHistory.length === 0) {
+            return;
+        }
+
+        folderHistory.pop();
+
+        const previousFolder =
+            folderHistory.length > 0
+                ? folderHistory[folderHistory.length - 1]
+                : null;
+
+        loadFolders(previousFolder ? previousFolder.id : null);
+    });
 }
 
 /* ===========================# Breadcrumb #=========================== */
@@ -209,29 +260,6 @@ function updateBreadcrumb() {
         });
 
         breadcrumb.appendChild(folderButton);
-    });
-}
-
-/* ===========================# Back Button #=========================== */
-
-const backButton = document.getElementById("back-button");
-
-if (backButton) {
-
-    backButton.addEventListener("click", () => {
-
-        if (folderHistory.length === 0) {
-            return;
-        }
-
-        folderHistory.pop();
-
-        const previousFolder =
-            folderHistory.length > 0
-                ? folderHistory[folderHistory.length - 1]
-                : null;
-
-        loadFolders(previousFolder ? previousFolder.id : null);
     });
 }
 
@@ -496,6 +524,7 @@ fileInput.addEventListener("change", async () => {
     }
 });
 
+
 /* ===========================# Folders Context Menu #=========================== */
 
 function showFolderContextMenu(event, folder) {
@@ -578,6 +607,168 @@ function closeContextMenus() {
 
         fileMenu.style.display = "none";
 
+    }
+}
+
+/*======================== moues =============================== */
+const folderArea = document.getElementById("folder-list");
+const fileArea = document.getElementById("file-list");
+const freespace = document.getElementById("freespace");
+
+const rightClickMenu =
+    document.getElementById("add-menu");
+
+
+function showRightClickMenu(event) {
+
+    event.preventDefault();
+
+    rightClickMenu.classList.add("open");
+
+    rightClickMenu.style.position = "fixed";
+
+    rightClickMenu.style.left =
+        event.clientX + "px";
+
+    rightClickMenu.style.top =
+        event.clientY + "px";
+}
+
+
+/* Empty folder area */
+
+folderArea.addEventListener("contextmenu", function (event) {
+
+    if (event.target === folderArea) {
+
+        const foldercontextMenu = document.getElementById("folder-context-menu");
+
+        if (!foldercontextMenu.contains(event.target)) {
+            foldercontextMenu.style.display = "none";
+        }
+
+        const filecontextMenu = document.getElementById("file-context-menu");
+
+        if (!filecontextMenu.contains(event.target)) {
+            filecontextMenu.style.display = "none";
+        }
+
+        showRightClickMenu(event);
+
+    }
+
+});
+
+
+/* Empty file area */
+
+fileArea.addEventListener("contextmenu", function (event) {
+
+    if (event.target === fileArea) {
+
+        const foldercontextMenu = document.getElementById("folder-context-menu");
+
+        if (!foldercontextMenu.contains(event.target)) {
+            foldercontextMenu.style.display = "none";
+        }
+
+        const filecontextMenu = document.getElementById("file-context-menu");
+
+        if (!filecontextMenu.contains(event.target)) {
+            filecontextMenu.style.display = "none";
+        }
+
+
+        showRightClickMenu(event);
+
+    }
+
+});
+
+const freeSpace = document.getElementById("freespace");
+
+freeSpace.addEventListener("contextmenu", function (event) {
+    event.preventDefault();
+
+    // Close folder/file context menus
+    closeContextMenus();
+
+    // Open Add menu
+    rightClickMenu.classList.add("open");
+
+    // Position it where we right-clicked
+    rightClickMenu.style.position = "fixed";
+    rightClickMenu.style.left = event.clientX + "px";
+    rightClickMenu.style.top = event.clientY + "px";
+});
+
+
+/* =========================
+   Close Add Menu
+   ========================= */
+
+document.addEventListener("mousedown", function (event) {
+
+    if (rightClickMenu.contains(event.target)) {
+        return;
+    }
+
+    const folderMenu =
+        document.getElementById("folder-context-menu");
+
+    const fileMenu =
+        document.getElementById("file-context-menu");
+
+
+    // Clicking inside any menu:
+    // DON'T close it before its button gets the click event.
+    if (
+        rightClickMenu.contains(event.target) ||
+        (folderMenu && folderMenu.contains(event.target)) ||
+        (fileMenu && fileMenu.contains(event.target))
+    ) {
+        return;
+    }
+
+    if (event.button === 0 || event.button === 1) {
+        closeAllMenus();
+    }
+
+    // Left click
+    if (event.button === 0) {
+
+        rightClickMenu.classList.remove("open");
+
+    }
+
+    // Middle click
+    if (event.button === 1) {
+
+        rightClickMenu.classList.remove("open");
+
+    }
+
+});
+
+function closeAllMenus() {
+
+    // Close Add menu
+    rightClickMenu.classList.remove("open");
+
+    // Close folder context menu
+    const folderMenu =
+        document.getElementById("folder-context-menu");
+
+    if (folderMenu) {
+        folderMenu.style.display = "none";
+    }
+
+    // Close file context menu
+    const fileMenu =
+        document.getElementById("file-context-menu");
+
+    if (fileMenu) {
+        fileMenu.style.display = "none";
     }
 }
 
@@ -1251,6 +1442,7 @@ confirmCopyButton.addEventListener("click", async () => {
 
 });
 
+
 /* #===========================# F&FCM ( Move ) #===========================# */
 
 /*------------------------ Move Folder ---------------------------*/
@@ -1428,6 +1620,18 @@ cancelMoveButton.addEventListener("click", () => {
     document.getElementById("move-dialog").style.display = "none";
 });
 
+const closemovedialog = document.getElementById("move-dialog");
+
+closemovedialog.addEventListener("click", (event) => {
+
+    if (event.target === closemovedialog) {
+
+        closemovedialog.style.display = "none";
+
+    }
+
+});
+
 
 /*------------------------ Move Here Button-------------------------*/
 
@@ -1515,6 +1719,7 @@ confirmMoveButton.addEventListener("click", async () => {
 
 });
 
+
 /* #===========================# F&FCM ( Delete ) #===========================# */
 
 const deleteConfirmModal =
@@ -1555,7 +1760,6 @@ deleteFolderButton.addEventListener("click", () => {
     ).style.display = "none";
 });
 
-
 /*------------------------ Delete File ---------------------------*/
 
 const deleteFileButton = document.getElementById("delete-file");
@@ -1577,7 +1781,6 @@ deleteFileButton.addEventListener("click", () => {
         "file-context-menu"
     ).style.display = "none";
 });
-
 
 /*------------------------ Delete Folder or File ---------------------------*/
 
@@ -1697,171 +1900,6 @@ deleteConfirmModal.addEventListener("click", (event) => {
     }
 
 });
-
-
-/*======================== moues =============================== */
-const folderArea = document.getElementById("folder-list");
-const fileArea = document.getElementById("file-list");
-const freespace = document.getElementById("freespace");
-
-const rightClickMenu =
-    document.getElementById("add-menu");
-
-
-function showRightClickMenu(event) {
-
-    event.preventDefault();
-
-    rightClickMenu.classList.add("open");
-
-    rightClickMenu.style.position = "fixed";
-
-    rightClickMenu.style.left =
-        event.clientX + "px";
-
-    rightClickMenu.style.top =
-        event.clientY + "px";
-}
-
-
-/* Empty folder area */
-
-folderArea.addEventListener("contextmenu", function (event) {
-
-    if (event.target === folderArea) {
-
-        const foldercontextMenu = document.getElementById("folder-context-menu");
-
-        if (!foldercontextMenu.contains(event.target)) {
-            foldercontextMenu.style.display = "none";
-        }
-
-        const filecontextMenu = document.getElementById("file-context-menu");
-
-        if (!filecontextMenu.contains(event.target)) {
-            filecontextMenu.style.display = "none";
-        }
-
-        showRightClickMenu(event);
-
-    }
-
-});
-
-
-/* Empty file area */
-
-fileArea.addEventListener("contextmenu", function (event) {
-
-    if (event.target === fileArea) {
-
-        const foldercontextMenu = document.getElementById("folder-context-menu");
-
-        if (!foldercontextMenu.contains(event.target)) {
-            foldercontextMenu.style.display = "none";
-        }
-
-        const filecontextMenu = document.getElementById("file-context-menu");
-
-        if (!filecontextMenu.contains(event.target)) {
-            filecontextMenu.style.display = "none";
-        }
-
-
-        showRightClickMenu(event);
-
-    }
-
-});
-
-const freeSpace = document.getElementById("freespace");
-
-freeSpace.addEventListener("contextmenu", function (event) {
-    event.preventDefault();
-
-    // Close folder/file context menus
-    closeContextMenus();
-
-    // Open Add menu
-    rightClickMenu.classList.add("open");
-
-    // Position it where we right-clicked
-    rightClickMenu.style.position = "fixed";
-    rightClickMenu.style.left = event.clientX + "px";
-    rightClickMenu.style.top = event.clientY + "px";
-});
-
-
-/* =========================
-   Close Add Menu
-   ========================= */
-
-document.addEventListener("mousedown", function (event) {
-
-    if (rightClickMenu.contains(event.target)) {
-        return;
-    }
-
-    const folderMenu =
-        document.getElementById("folder-context-menu");
-
-    const fileMenu =
-        document.getElementById("file-context-menu");
-
-
-    // Clicking inside any menu:
-    // DON'T close it before its button gets the click event.
-    if (
-        rightClickMenu.contains(event.target) ||
-        (folderMenu && folderMenu.contains(event.target)) ||
-        (fileMenu && fileMenu.contains(event.target))
-    ) {
-        return;
-    }
-
-    if (event.button === 0 || event.button === 1) {
-        closeAllMenus();
-    }
-
-    // Left click
-    if (event.button === 0) {
-
-        rightClickMenu.classList.remove("open");
-
-    }
-
-    // Middle click
-    if (event.button === 1) {
-
-        rightClickMenu.classList.remove("open");
-
-    }
-
-});
-
-function closeAllMenus() {
-
-    // Close Add menu
-    rightClickMenu.classList.remove("open");
-
-    // Close folder context menu
-    const folderMenu =
-        document.getElementById("folder-context-menu");
-
-    if (folderMenu) {
-        folderMenu.style.display = "none";
-    }
-
-    // Close file context menu
-    const fileMenu =
-        document.getElementById("file-context-menu");
-
-    if (fileMenu) {
-        fileMenu.style.display = "none";
-    }
-}
-
-
 
 
 /* #===========================# Start Drive #===========================# */

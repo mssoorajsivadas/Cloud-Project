@@ -8,2047 +8,22 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/drive.css') }}">
   <title>Cloud Drive</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-
-      background: var(--bg-app);
-
-      font-family: Arial, sans-serif;
-
-      overflow: hidden;
-
-      color: var(--text-primary);
-    }
-
-
-    /*----------------------------------------------------------*/
-
-
-    .app {
-      display: grid;
-
-      grid-template-columns: 240px minmax(0, 1fr);
-
-      height: 100vh;
-
-      min-height: 0;
-
-      transition: grid-template-columns 0.3s ease;
-    }
-
-    .sidebar {
-      display: flex;
-
-      flex-direction: column;
-
-      padding: 20px;
-
-      background: var(--bg-widget);
-
-      overflow: hidden;
-    }
-
-    .bottom-menu {
-      margin-top: auto;
-    }
-
-    .menu {
-      display: flex;
-
-      flex-direction: column;
-
-      gap: 8px;
-    }
-
-    .menu-item {
-      width: 100%;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 14px;
-
-      padding: 12px;
-
-      border: none;
-
-      border-radius: 10px;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      font-size: 15px;
-
-      cursor: pointer;
-
-      text-align: left;
-    }
-
-    .menu-item:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .menu-item.active {
-      background: var(--bg-action);
-    }
-
-
-    /*----------------------------------------------------------*/
-
-
-    .topbar {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      padding: 10px 30px;
-    }
-
-    .topbar-left {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: start;
-
-      gap: 15px;
-    }
-
-    #menu-button {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      padding: 10px 10px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      color: var(--text-primary);
-
-      background: transparent;
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    #menu-button:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .topbar-left h1 {
-      color: var(--text-primary);
-
-      font-size: 30px;
-
-      font-weight: lighter;
-    }
-
-    .topbar-right {
-      position: relative;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 10px;
-    }
-
-    #account-button {
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      padding: 10px 15px;
-
-      border: none;
-
-      border-radius: 50px;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      font-size: 15px;
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    #account-button:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .glossy-typewriter-wrap {
-      padding: 20px 0px;
-    }
-
-    .glossy-typewriter {
-      font-size: 25px;
-
-      cursor: pointer;
-    }
-
-    .account-wrapper {
-      background: var(--bg-widget);
-      border-radius: 50px;
-    }
-
-    .account-menu {
-      position: absolute;
-
-      left: -50px;
-
-      bottom: calc(-100% + -70px);
-
-      width: 180px;
-
-      padding: 6px;
-
-      background: var(--bg-widget);
-
-      border: 1px solid #333;
-
-      border-radius: 10px;
-
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-
-      display: none;
-
-      z-index: 1000;
-    }
-
-    .account-menu.open {
-      display: block;
-    }
-
-    .account-menu-item {
-      width: 100%;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      padding: 10px;
-
-      border: none;
-
-      border-radius: 7px;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      cursor: pointer;
-
-      text-align: left;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .account-menu-item:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    #form-message {
-      display: none;
-
-      padding: 10px 14px;
-
-      border-radius: 8px;
-
-      font-size: 14px;
-
-      align-items: center;
-
-      border-radius: 50px;
-
-      justify-content: space-between;
-
-      gap: 10px;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    #form-message.success {
-      display: flex;
-
-      background: var(--massage-success-bg);
-
-      color: var(--massage-success-text);
-    }
-
-    #form-message.error {
-      display: flex;
-
-      background: var(--massage-error-bg);
-
-      color: var(--massage-error-text);
-    }
-
-    #message-close {
-
-      border: none;
-
-      background: transparent;
-
-      font-size: 20px;
-
-      cursor: pointer;
-
-      color: inherit;
-    }
-
-
-    /*-----------------------------------------------------------------*/
-
-
-
-    .path {
-      flex-shrink: 0;
-
-      display: flex;
-
-      align-items: center;
-
-      padding: 10px 20px;
-    }
-
-    .back-button {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      gap: 10px;
-
-      padding: 10px 15px;
-
-      font-size: 15px;
-
-      background: none;
-
-      color: var(--text-primary);
-
-      border: none;
-
-      border-radius: 50px;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .back-button:hover {
-      background: var(--bg-widget-hover);
-
-      color: var(--title);
-    }
-
-    .drive-path {
-      display: flex;
-
-      align-items: center;
-
-      padding: 0px 10px;
-
-      white-space: nowrap;
-
-      overflow-x: auto;
-      overflow-y: hidden;
-
-      min-width: 0;
-
-      scrollbar-width: thin;
-
-      gap: 15px;
-    }
-
-    .drive-path>* {
-      flex-shrink: 0;
-    }
-
-    .drive-path .home-button {
-      padding: 10px 15px;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      font-size: 15px;
-
-      border-radius: 50px;
-
-      border: none;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .drive-path .home-button:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .drive-path .home-button .material-symbols-rounded {
-      font-variation-settings: 'FILL' 1, 'wght' 0, 'GRAD' 0, 'opsz' 0;
-    }
-
-    .drive-path button {
-      padding: 10px 15px;
-
-      font-size: 15px;
-
-      border-radius: 50px;
-
-      border: none;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .drive-path button:hover {
-      background: var(--bg-widget-hover);
-    }
-
-
-    /*-----------------------------------------------------------------*/
-
-
-    .app.sidebar-collapsed {
-      grid-template-columns: 70px minmax(0, 1fr);
-    }
-
-    .app.sidebar-collapsed .label {
-      display: none;
-    }
-
-    .app.sidebar-collapsed .menu-item {
-      justify-content: center;
-    }
-
-    .app.sidebar-collapsed .sidebar {
-      padding: 20px 10px;
-    }
-
-
-    /*-----------------------------------------------------------------*/
-
-
-    .sorting h1 {
-      padding: 10px 40px;
-
-      font-size: 15px;
-
-      color: var(--title);
-    }
-
-
-    /*-----------------------------------------------------------------*/
-
-
-    .action-button {
-      padding: 10px 30px;
-    }
-
-    .new-bt {
-      padding: 10px 20px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-around;
-
-      gap: 10px;
-
-      background: var(--bg-action);
-
-      border: none;
-
-      border-radius: 50px;
-
-      color: var(--text-primary);
-
-      font-size: 15px;
-
-      cursor: pointer;
-    }
-
-    /* New button + menu container */
-    .action-button {
-      position: relative;
-    }
-
-
-    /* Add menu */
-    .add-menu {
-      position: absolute;
-      top: calc(90% + 8px);
-      left: 30px;
-
-      width: 190px;
-
-      display: none;
-
-      padding: 6px;
-
-      background: var(--secondary-color, #161618);
-
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-
-      z-index: 1000;
-    }
-
-
-    /* JavaScript adds this class */
-    .add-menu.open {
-      display: flex;
-      flex-direction: column;
-    }
-
-
-    /* Menu items */
-    .add-menu-item {
-      width: 100%;
-
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      padding: 10px 12px;
-
-      border: none;
-      border-radius: 7px;
-
-      background: transparent;
-      color: white;
-
-      font-size: 14px;
-
-      text-align: left;
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-
-    /* Icon */
-    .add-menu-item .material-symbols-rounded {
-      font-size: 20px;
-    }
-
-
-    /* Hover */
-    .add-menu-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /*-----------------------------------------------------------------*/
-
-
-    .content {
-      height: 100%;
-
-      min-height: 0;
-
-      display: flex;
-
-      flex-direction: column;
-    }
-
-    .content-area {
-      flex: 1;
-
-      padding: 0px 30px;
-
-      min-height: 0;
-
-      overflow-y: auto;
-
-      overflow-x: hidden;
-    }
-
-    .folder-list {
-      padding: 10px 0px;
-
-      display: grid;
-
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-
-      gap: 15px;
-    }
-
-    .folders {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: start;
-
-      gap: 10px;
-
-      padding: 0px 30px;
-
-      height: 80px;
-
-      background: var(--bg-widget);
-
-      border: none;
-
-      border-radius: 10px;
-
-      font-size: 15px;
-
-      color: var(--text-primary);
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .folders:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .folders .material-symbols-rounded {
-      font-size: 30px;
-
-      font-variation-settings: 'FILL' 1, 'wght' 0, 'GRAD' 0, 'opsz' 0;
-    }
-
-    .file-list {
-      padding: 10px 0px;
-
-      display: grid;
-
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-
-      gap: 15px;
-    }
-
-    .files {
-      min-width: 0;
-      min-height: 190px;
-
-      box-sizing: border-box;
-
-      padding: 18px;
-
-      display: flex;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      justify-content: space-around;
-
-      gap: 12px;
-
-      border-radius: 14px;
-
-      background: var(--bg-widget);
-
-      cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        border-color 0.2s ease;
-    }
-
-    .files:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .files .material-symbols-rounded {
-      padding: 50px;
-      font-size: 48px;
-    }
-
-    .files .file-label {
-      display: block;
-
-      width: 100%;
-
-      color: var(--text-primary);
-
-      text-align: center;
-
-      font-size: 15px;
-
-      white-space: nowrap;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
-    }
-
-    .page-content {
-      display: none;
-    }
-
-    .page-content.active {
-      display: flex;
-      flex-direction: column;
-
-      flex: 1;
-      min-height: 0;
-    }
-
-    /*------------------------------------------------------------------*/
-
-    .notavalable {
-      display: flex;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      justify-content: center;
-
-      height: 80vh;
-
-      color: var(--text-primary);
-    }
-
-    /*------------------------------------------------------------------*/
-
-    /* Dark background behind popup */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-
-      display: none;
-      align-items: center;
-      justify-content: center;
-
-      background: rgba(0, 0, 0, 0.55);
-
-
-      z-index: 2000;
-    }
-
-    /* Show popup */
-    .modal-overlay.open {
-      display: flex;
-    }
-
-
-    /* Popup window */
-    .modal {
-      width: min(400px, calc(100% - 30px));
-
-      padding: 20px;
-
-      background: var(--bg-widget);
-      color: var(--text-primary);
-
-      border: 1px solid #333;
-      border-radius: 14px;
-
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-    }
-
-
-    /* Header */
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      margin-bottom: 20px;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-
-    /* Close button */
-    #close-folder-modal,
-    #close-delete-modal {
-      width: 32px;
-      height: 32px;
-
-      border: none;
-      border-radius: 8px;
-
-      background: transparent;
-      color: white;
-
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    #close-folder-modal:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-
-    /* Input */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .form-group label {
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      box-sizing: border-box;
-
-      padding: 11px 12px;
-
-      border: 1px solid #444;
-      border-radius: 8px;
-
-      background: var(--bg-app);
-      color: white;
-
-      outline: none;
-    }
-
-    .form-group input:focus {
-      border-color: var(--bg-action);
-    }
-
-
-    /* Buttons */
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-
-      margin-top: 20px;
-    }
-
-    .modal-actions button {
-      padding: 9px 16px;
-
-      border: none;
-      border-radius: 8px;
-
-      cursor: pointer;
-    }
-
-    #cancel-folder-button {
-      background: #333;
-      color: var(--text-primary);
-    }
-
-    #submit-folder-name {
-      background: var(--bg-action);
-      color: var(--text-primary);
-    }
-
-    #cancel-folder-button:hover {
-      background: #444;
-    }
-
-    #submit-folder-button:hover {
-      opacity: 0.9;
-    }
-
-    /* ========================= DELETE CONFIRMATION MODAL ========================= */
-
-    .delete-confirm-content {
-      padding: 20px 0;
-    }
-
-    .delete-confirm-content p {
-      margin: 0;
-      line-height: 1.5;
-    }
-
-    #delete-confirm-message {
-      font-size: 16px;
-      color: var(--text-color, #ffffff);
-    }
-
-    .delete-warning {
-      margin-top: 10px !important;
-      font-size: 13px;
-      color: #a0a0a0;
-    }
-
-
-    /* ========================= DELETE BUTTON ========================= */
-
-    #confirm-delete-button {
-      background: #d83a3a;
-      color: #ffffff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.2s ease;
-    }
-
-    #confirm-delete-button:hover {
-      background: #b92d2d;
-    }
-
-
-    /* ========================= CANCEL BUTTON ========================= */
-
-    #cancel-delete-button {
-      background: transparent;
-      color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 10px 18px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    #cancel-delete-button:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /*------------------------------------------------------------------*/
-
-    .context-menu {
-      position: fixed;
-
-      display: none;
-
-      min-width: 190px;
-
-      padding: 6px;
-
-      box-sizing: border-box;
-
-      border: 1px solid #2a3041;
-
-      border-radius: 12px;
-
-      background: var(--bg-widget);
-
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-
-      z-index: 1000;
-    }
-
-    .context-menu button {
-      width: 100%;
-
-      height: 38px;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 20px;
-
-      padding: 0 10px;
-
-      border: none;
-
-      border-radius: 7px;
-
-      background: transparent;
-
-      color: var(--text-primary);
-
-      font-size: 12px;
-
-      text-align: left;
-
-      cursor: pointer;
-
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .context-menu button:hover {
-      background: var(--bg-widget-hover);
-    }
-
-    .context-menu button span {
-      width: 18px;
-
-      text-align: center;
-    }
-
-    .context-divider {
-      height: 1px;
-
-      margin: 5px 4px;
-
-      background: var(--bg-widget-hover);
-    }
-
-
-    /*------------------------------------------------------------------*/
-
-    /* =====================================
-   COPY DIALOG
-===================================== */
-
-    #copy-dialog {
-      position: fixed;
-
-      inset: 0;
-
-      width: 100%;
-      height: 100%;
-
-      /* Your current JS changes this to block */
-      display: none;
-
-      background: rgba(0, 0, 0, 0.55);
-
-      z-index: 9999;
-    }
-
-
-    /*
-   When JavaScript does:
-
-   style.display = "block"
-
-   we use an inner wrapper that is
-   positioned in the center.
-*/
-
-    #copy-dialog .copy-window {
-      position: absolute;
-
-      top: 50%;
-      left: 50%;
-
-      transform: translate(-50%, -50%);
-
-      width: min(460px, calc(100% - 32px));
-
-      max-height: 80vh;
-
-      display: flex;
-      flex-direction: column;
-
-      background: var(--secondary-color, #161618);
-
-      border: 1px solid rgba(255, 255, 255, 0.08);
-
-      border-radius: 14px;
-
-      overflow: hidden;
-
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.45);
-    }
-
-
-    /* =====================================
-   HEADER
-===================================== */
-
-    .copy-header {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      padding: 18px 20px;
-
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .copy-header h2 {
-      margin: 0;
-
-      color: white;
-
-      font-size: 18px;
-
-      font-weight: 600;
-    }
-
-
-    /* Close */
-
-    .copy-close-button {
-      width: 34px;
-      height: 34px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: transparent;
-
-      color: #aaa;
-
-      font-size: 25px;
-
-      cursor: pointer;
-    }
-
-    .copy-close-button:hover {
-      background: rgba(255, 255, 255, 0.08);
-
-      color: white;
-    }
-
-
-    /* =====================================
-   NAVIGATION
-===================================== */
-
-    .copy-navigation {
-      display: flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      min-width: 0;
-
-      padding: 14px 20px 10px;
-    }
-
-
-    /* Back button */
-
-    .copy-back-button {
-      width: 36px;
-      height: 36px;
-
-      flex-shrink: 0;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: rgba(255, 255, 255, 0.06);
-
-      color: #ccc;
-
-      cursor: pointer;
-    }
-
-    .copy-back-button:hover {
-      background: rgba(255, 255, 255, 0.12);
-
-      color: white;
-    }
-
-
-    /* Breadcrumb */
-
-    .copy-breadcrumb {
-      display: flex;
-
-      align-items: center;
-
-      gap: 3px;
-
-      min-width: 0;
-
-      overflow-x: auto;
-
-      overflow-y: hidden;
-
-      white-space: nowrap;
-
-      scrollbar-width: thin;
-    }
-
-    .copy-breadcrumb::-webkit-scrollbar {
-      display: none;
-    }
-
-
-    /* Breadcrumb buttons */
-
-    .copy-breadcrumb button {
-      flex-shrink: 0;
-
-      padding: 6px 4px;
-
-      border: none;
-
-      background: transparent;
-
-      color: #aaa;
-
-      font-size: 14px;
-
-      cursor: pointer;
-    }
-
-    .copy-breadcrumb button:hover {
-      color: white;
-    }
-
-
-    /* Breadcrumb "/" */
-
-    .copy-breadcrumb span {
-      flex-shrink: 0;
-
-      color: #666;
-
-      font-size: 14px;
-    }
-
-
-    /* =====================================
-   FOLDER LIST
-===================================== */
-
-    .copy-folder-list {
-      margin: 0 20px;
-
-      min-height: 180px;
-
-      max-height: 300px;
-
-      overflow-y: auto;
-
-      border: 1px solid rgba(255, 255, 255, 0.08);
-
-      border-radius: 10px;
-
-      background: rgba(0, 0, 0, 0.12);
-    }
-
-
-    /*
-   These are the buttons created by:
-
-   document.createElement("button")
-*/
-
-    .copy-folder-list button {
-      width: 100%;
-
-      min-height: 48px;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      padding: 0 14px;
-
-      border: none;
-
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
-      background: transparent;
-
-      color: #ddd;
-
-      font-size: 14px;
-
-      text-align: left;
-
-      cursor: pointer;
-    }
-
-    .copy-folder-list button:last-child {
-      border-bottom: none;
-    }
-
-    .copy-folder-list button:hover {
-      background: rgba(255, 255, 255, 0.07);
-
-      color: white;
-    }
-
-
-    /* =====================================
-   ACTIONS
-===================================== */
-
-    .copy-actions {
-      display: flex;
-
-      justify-content: flex-end;
-
-      gap: 10px;
-
-      padding: 16px 20px;
-
-      margin-top: 16px;
-
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-
-    /* Cancel */
-
-    .copy-cancel-button {
-      padding: 10px 18px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: rgba(255, 255, 255, 0.07);
-
-      color: #ccc;
-
-      cursor: pointer;
-    }
-
-    .copy-cancel-button:hover {
-      background: rgba(255, 255, 255, 0.12);
-
-      color: white;
-    }
-
-
-    /* Copy */
-
-    .copy-confirm-button {
-      padding: 10px 20px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: var(--primary-color, #37448e);
-
-      color: white;
-
-      font-weight: 500;
-
-      cursor: pointer;
-    }
-
-    .copy-confirm-button:hover {
-      filter: brightness(1.15);
-    }
-
-
-    /* =====================================
-   SCROLLBAR
-===================================== */
-
-    .copy-folder-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .copy-folder-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .copy-folder-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.18);
-
-      border-radius: 10px;
-    }
-
-
-    /* =====================================
-   MOBILE
-===================================== */
-
-    @media (max-width: 600px) {
-
-      #copy-dialog .copy-window {
-        width: calc(100% - 24px);
-
-        max-height: 85vh;
-
-        border-radius: 12px;
-      }
-
-      .copy-folder-list {
-        max-height: 250px;
-      }
-
-      .copy-actions {
-        flex-direction: column-reverse;
-      }
-
-      .copy-cancel-button,
-      .copy-confirm-button {
-        width: 100%;
-      }
-    }
-
-
-
-    /*------------------------------------------------------------------*/
-
-    /* =====================================
-   MOVE DIALOG
-===================================== */
-
-    #move-dialog {
-      position: fixed;
-
-      inset: 0;
-
-      width: 100%;
-      height: 100%;
-
-      display: none;
-
-      background: rgba(0, 0, 0, 0.55);
-
-      z-index: 9999;
-    }
-
-
-    /* =====================================
-   MOVE WINDOW
-===================================== */
-
-    #move-dialog .move-window {
-
-      position: absolute;
-
-      top: 50%;
-      left: 50%;
-
-      transform: translate(-50%, -50%);
-
-      width: min(460px, calc(100% - 32px));
-
-      max-height: 80vh;
-
-      display: flex;
-      flex-direction: column;
-
-      background: var(--secondary-color, #161618);
-
-      border: 1px solid rgba(255, 255, 255, 0.08);
-
-      border-radius: 14px;
-
-      overflow: hidden;
-
-      box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.45);
-    }
-
-
-    /* =====================================
-   HEADER
-===================================== */
-
-    .move-header {
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      padding: 18px 20px;
-
-      border-bottom:
-        1px solid rgba(255, 255, 255, 0.08);
-    }
-
-
-    .move-header h2 {
-
-      margin: 0;
-
-      color: white;
-
-      font-size: 18px;
-
-      font-weight: 600;
-    }
-
-
-    /* Close button */
-
-    .move-close-button {
-
-      width: 34px;
-      height: 34px;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background: transparent;
-
-      color: #aaa;
-
-      font-size: 25px;
-
-      cursor: pointer;
-    }
-
-
-    .move-close-button:hover {
-
-      background:
-        rgba(255, 255, 255, 0.08);
-
-      color: white;
-    }
-
-
-    /* =====================================
-   NAVIGATION
-===================================== */
-
-    .move-navigation {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      min-width: 0;
-
-      padding: 14px 20px 10px;
-    }
-
-
-    /* Back button */
-
-    .move-back-button {
-
-      width: 36px;
-      height: 36px;
-
-      flex-shrink: 0;
-
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background:
-        rgba(255, 255, 255, 0.06);
-
-      color: #ccc;
-
-      cursor: pointer;
-    }
-
-
-    .move-back-button:hover {
-
-      background:
-        rgba(255, 255, 255, 0.12);
-
-      color: white;
-    }
-
-
-    /* =====================================
-   BREADCRUMB
-===================================== */
-
-    .move-breadcrumb {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 3px;
-
-      min-width: 0;
-
-      overflow-x: auto;
-
-      overflow-y: hidden;
-
-      white-space: nowrap;
-
-      scrollbar-width: thin;
-    }
-
-
-    .move-breadcrumb::-webkit-scrollbar {
-      display: none;
-    }
-
-
-    /* Breadcrumb buttons */
-
-    .move-breadcrumb button {
-
-      flex-shrink: 0;
-
-      padding: 6px 4px;
-
-      border: none;
-
-      background: transparent;
-
-      color: #aaa;
-
-      font-size: 14px;
-
-      cursor: pointer;
-    }
-
-
-    .move-breadcrumb button:hover {
-
-      color: white;
-    }
-
-
-    /* "/" separator */
-
-    .move-breadcrumb span {
-
-      flex-shrink: 0;
-
-      color: #666;
-
-      font-size: 14px;
-    }
-
-
-    /* =====================================
-   FOLDER LIST
-===================================== */
-
-    .move-folder-list {
-
-      margin: 0 20px;
-
-      min-height: 180px;
-
-      max-height: 300px;
-
-      overflow-y: auto;
-
-      border:
-        1px solid rgba(255, 255, 255, 0.08);
-
-      border-radius: 10px;
-
-      background:
-        rgba(0, 0, 0, 0.12);
-    }
-
-
-    /* Buttons created by JavaScript */
-
-    .move-folder-list button {
-
-      width: 100%;
-
-      min-height: 48px;
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 10px;
-
-      padding: 0 14px;
-
-      border: none;
-
-      border-bottom:
-        1px solid rgba(255, 255, 255, 0.05);
-
-      background: transparent;
-
-      color: #ddd;
-
-      font-size: 14px;
-
-      text-align: left;
-
-      cursor: pointer;
-    }
-
-
-    .move-folder-list button:last-child {
-      border-bottom: none;
-    }
-
-
-    .move-folder-list button:hover {
-
-      background:
-        rgba(255, 255, 255, 0.07);
-
-      color: white;
-    }
-
-
-    /* =====================================
-   ACTIONS
-===================================== */
-
-    .move-actions {
-
-      display: flex;
-
-      justify-content: flex-end;
-
-      gap: 10px;
-
-      padding: 16px 20px;
-
-      margin-top: 16px;
-
-      border-top:
-        1px solid rgba(255, 255, 255, 0.08);
-    }
-
-
-    /* Cancel */
-
-    .move-cancel-button {
-
-      padding: 10px 18px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background:
-        rgba(255, 255, 255, 0.07);
-
-      color: #ccc;
-
-      cursor: pointer;
-    }
-
-
-    .move-cancel-button:hover {
-
-      background:
-        rgba(255, 255, 255, 0.12);
-
-      color: white;
-    }
-
-
-    /* Move Here */
-
-    .move-confirm-button {
-
-      padding: 10px 20px;
-
-      border: none;
-
-      border-radius: 8px;
-
-      background:
-        var(--primary-color, #37448e);
-
-      color: white;
-
-      font-weight: 500;
-
-      cursor: pointer;
-    }
-
-
-    .move-confirm-button:hover {
-
-      filter: brightness(1.15);
-    }
-
-
-    /* =====================================
-   SCROLLBAR
-===================================== */
-
-    .move-folder-list::-webkit-scrollbar {
-
-      width: 6px;
-    }
-
-
-    .move-folder-list::-webkit-scrollbar-track {
-
-      background: transparent;
-    }
-
-
-    .move-folder-list::-webkit-scrollbar-thumb {
-
-      background:
-        rgba(255, 255, 255, 0.18);
-
-      border-radius: 10px;
-    }
-
-
-    /* =====================================
-   MOBILE
-===================================== */
-
-    @media (max-width: 600px) {
-
-      #move-dialog .move-window {
-
-        width: calc(100% - 24px);
-
-        max-height: 85vh;
-
-        border-radius: 12px;
-      }
-
-
-      .move-folder-list {
-
-        max-height: 250px;
-      }
-
-
-      .move-actions {
-
-        flex-direction: column-reverse;
-      }
-
-
-      .move-cancel-button,
-      .move-confirm-button {
-
-        width: 100%;
-      }
-    }
-
-
-    /*------------------------------------------------------------------*/
-
-    @media (max-width: 900px) {
-
-      .app {
-        grid-template-columns: 70px minmax(0, 1fr);
-      }
-
-      .label {
-        display: none;
-      }
-
-      .menu-item {
-        justify-content: center;
-      }
-
-      .sidebar {
-        padding: 20px 10px;
-      }
-
-      #menu-button {
-        display: none;
-      }
-
-      .topbar-right .topbar-right {
-        display: none;
-      }
-
-      .account-menu {
-        left: -110px;
-      }
-
-      .backbt-lable {
-        display: none;
-      }
-
-      .path {
-        padding: 0px 20px;
-      }
-    }
-
-    @media (max-width: 600px) {
-
-      .app {
-        display: block;
-
-        min-height: 100vh;
-      }
-
-      #menu-button {
-        display: none;
-      }
-
-      .sidebar {
-        position: fixed;
-
-        left: 0;
-
-        bottom: 0;
-
-        width: 100%;
-
-        height: 70px;
-
-        padding: 5px 10px;
-
-        z-index: 1000;
-
-        display: flex;
-
-        flex-direction: row;
-
-        background: var(--bg-sidebar);
-      }
-
-      .menu {
-        width: 100%;
-
-        display: flex;
-
-        flex-direction: row;
-
-        justify-content: space-around;
-
-        align-items: center;
-
-        gap: 0;
-      }
-
-      .menu-item {
-        width: auto;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        justify-content: center;
-
-        gap: 2px;
-
-        padding: 9px 12px;
-
-        font-size: 12px;
-      }
-
-      .menu-item .label {
-        display: block;
-      }
-
-      .bottom-menu {
-        display: none;
-      }
-
-      .content {
-        width: 100%;
-
-        min-height: 100vh;
-
-        padding-bottom: 70px;
-      }
-
-      .topbar-account h1 {
-        display: none;
-      }
-
-      .drive-path {
-        padding: 0px 10px;
-
-        gap: 10px;
-      }
-    }
-  </style>
 </head>
 
 <body>
-  <div class="app">
 
-    <!-- SIDEBAR -->
+  <main class="app">
+
     <aside class="sidebar">
 
       <!-- MENU -->
       <nav class="menu">
+
+        <button class="menu-item" id="menu-button">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
 
         <button class="menu-item" data-page="home">
           <span class="material-symbols-rounded">home</span>
@@ -2061,7 +36,7 @@
         </button>
 
         <button class="menu-item active" data-page="drive">
-          <span class="material-symbols-rounded">folder</span>
+          <span class="material-symbols-rounded">files</span>
           <span class="label">Drive</span>
         </button>
 
@@ -2081,6 +56,32 @@
       <!-- BOTTOM MENU -->
       <div class="bottom-menu">
 
+        <div class="message-container" id="message-container"></div>
+
+        <div class="account-menu" id="account-menu">
+          <button class="account-menu-item">
+            <span class="material-symbols-rounded"> face </span>
+            <span class="topbar-right" id="welcome"> Hi, User </span>
+          </button>
+
+          <button class="account-menu-item" id="logout-button">
+            <span class="material-symbols-rounded"> logout </span> Logout </button>
+        </div>
+
+        <button class="menu-item" id="notifications-button">
+          <span class="material-symbols-rounded"> notifications </span>
+        </button>
+
+        <button class="menu-item" id="theme-toggle" type="button" aria-label="Switch to dark theme">
+          <span id="theme-icon" class="material-symbols-rounded"> dark_mode </span>
+          <span class="label" id="theme-label">Dark mode</span>
+        </button>
+
+        <button class="menu-item" id="account-button">
+          <span class="material-symbols-rounded"> account_circle </span>
+          <span class="label">Account</span>
+        </button>
+
         <button class="menu-item" data-page="settings">
           <span class="material-symbols-rounded">settings</span>
           <span class="label">Settings</span>
@@ -2090,424 +91,372 @@
 
     </aside>
 
-
-    <main class="content"> <!-- TOP BAR -->
-      <header class="topbar">
-
-        <div class="topbar-left">
-
-          <button id="menu-button"> <span class="material-symbols-rounded">menu</span> </button>
-
-          <div class="glossy-typewriter-wrap"> <a href="/"> <span class="glossy-typewriter" id="heroType" data-text=""
-                data-words='["Aerial Cloud", "welcoming you", "Aerial Cloud"]' data-type-speed="90"
-                data-delete-speed="45" data-pause="1100"> <span class="sparkle s1"> <svg viewBox="0 0 24 24"
-                    fill="none">
-                    <path d="M12 1 L14 9 L22 12 L14 15 L12 23 L10 15 L2 12 L10 9 Z" fill="currentColor"
-                      style="color:#ffe066" />
-                  </svg> </span> <span class="sparkle s2"> <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M12 1 L14 9 L22 12 L14 15 L12 23 L10 15 L2 12 L10 9 Z" fill="currentColor"
-                      style="color:#7bffb0" />
-                  </svg> </span> <span class="gt-cursor">&nbsp;</span> </span> </a> </div>
-        </div>
-
-        <div class="topbar-right">
-          <div id="form-message">
-            <span class="material-symbols-rounded"> notifications </span>
-            <span id="message-text"> hello how are you </span>
-            <button id="message-close" type="button"> × </button>
-          </div>
-
-          <div class="account-wrapper">
-
-            <button id="account-button">
-              <span class="topbar-right" id="welcome"> Hi, User </span>
-              <span class="material-symbols-rounded"> account_circle </span>
-            </button>
-
-            <div class="account-menu" id="account-menu">
-              <button class="account-menu-item">
-                <span class="material-symbols-rounded"> person </span> Profile </button>
-
-              <button class="account-menu-item" id="logout-button">
-                <span class="material-symbols-rounded"> logout </span> Logout </button>
-            </div>
-          </div>
-        </div>
-
-      </header> <!-- DRIVE PAGE -->
-
-      <section class="page-content" id="home">
-        <div class="notavalable"><span>Under development</span></div>
-      </section>
-      <section class="page-content" id="dashboard">
-        <div class="notavalable"><span>Under development</span></div>
-      </section>
-      <section class="page-content active" id="drive">
-
-        <!-- PATH -->
+    <section class="mydrive">
+      <div class="holder">
         <div class="path">
           <button class="back-button" id="back-button">
             <span class="material-symbols-rounded"> arrow_back </span>
             <span class="backbt-lable"> Back </span>
           </button>
 
+          <span>|</span>
+
           <nav class="drive-path" id="breadcrumb">
 
           </nav>
         </div>
 
-        <div class="action-button">
+        <div class="search-container">
+          <input type="search" id="search-input" placeholder="Search files and folders..." autocomplete="off" />
 
-          <button class="new-bt" id="add-button">
-            <span class="material-symbols-rounded">add</span>
-            <span class="addbt-lable">Add</span>
+          <button id="search-button" aria-label="Search">
+            <span class="material-symbols-rounded search-icon">
+              search
+            </span>
+          </button>
+        </div>
+
+      </div>
+
+      <div class="action-button">
+
+        <button class="new-bt" id="add-button">
+          <span class="material-symbols-rounded">add</span>
+          <span class="addbt-lable">Add</span>
+        </button>
+
+        <div class="add-menu" id="add-menu">
+
+          <button type="button" class="add-menu-item" id="New-folder-button">
+
+            <span class="material-symbols-rounded">create_new_folder</span>
+            New Folder
+
           </button>
 
-          <div class="add-menu" id="add-menu">
+          <button type="button" class="add-menu-item" id="upload-file-button">
 
-            <button type="button" class="add-menu-item" id="New-folder-button">
+            <span class="material-symbols-rounded">upload</span>
+            Upload File
 
-              <span class="material-symbols-rounded">create_new_folder</span>
-              New Folder
-
-            </button>
-
-            <button type="button" class="add-menu-item" id="upload-file-button">
-
-              <span class="material-symbols-rounded">upload</span>
-              Upload File
-
-            </button>
-            <input type="file" id="file-input" hidden>
-
-          </div>
-
-        </div>
-
-        <div class="sorting">
-          <h1> Folders & Files </h1>
-        </div>
-
-        <div class="content-area">
-
-          <!-- FOLDERS -->
-          <div class="folder-list" id="folder-list">
-
-
-
-          </div>
-          <!-- FILES -->
-          <div class="file-list" id="file-list">
-
-
-
-          </div>
-          <!-- TEST CONTENT --> <!-- Remove this later -->
-
-          <div id="freespace" style="height: 1000px;"></div>
-        </div>
-      </section>
-      <section class="page-content" id="favorite">
-        <div class="notavalable"><span>Under development</span></div>
-      </section>
-      <section class="page-content" id="trash">
-        <div class="notavalable"><span>Under development</span></div>
-      </section>
-      <section class="page-content" id="settings">
-        <div class="notavalable"><span>Under development</span></div>
-      </section>
-
-
-
-      <!-- ========================= Create Popup ========================== -->
-
-      <div class="modal-overlay" id="create-folder-modal">
-
-        <div class="modal">
-
-          <div class="modal-header">
-            <h2 id="folder-modal-title">Create Folder</h2>
-
-            <button type="button" id="close-folder-modal">
-              ×
-            </button>
-          </div>
-
-          <form id="create-folder-form">
-
-            <div class="form-group">
-              <label for="folder-name">Folder name</label>
-
-              <input type="text" id="folder-name" name="folder_name" placeholder="Enter folder name" autocomplete="off"
-                required>
-            </div>
-
-            <div class="modal-actions">
-
-              <button type="button" id="cancel-folder-button">
-                Cancel
-              </button>
-
-              <button type="submit" id="submit-folder-name">
-                Create
-              </button>
-
-            </div>
-
-          </form>
+          </button>
+          <input type="file" id="file-input" hidden>
 
         </div>
 
       </div>
 
-      <!-- ========================= Confirm Popup ========================== -->
+      <div class="sorting">
+        <h1> Folders & Files </h1>
+      </div>
 
-      <div class="modal-overlay" id="delete-confirm-modal">
+      <div class="content-area">
 
-        <div class="modal">
+        <!-- FOLDERS -->
+        <div class="folder-list" id="folder-list">
 
-          <div class="modal-header">
 
-            <h2>Delete Folder</h2>
 
-            <button type="button" id="close-delete-modal">
-              ×
-            </button>
+        </div>
+        <!-- FILES -->
+        <div class="file-list" id="file-list">
 
-          </div>
 
-          <div class="delete-confirm-content">
 
-            <p id="delete-confirm-message">
-              Are you sure you want to delete this folder?
-            </p>
+        </div>
+        <!-- TEST CONTENT --> <!-- Remove this later -->
 
-            <p class="delete-warning">
-              Everything inside this folder will also be deleted.
-            </p>
+        <div id="freespace" style="height: 700px;"></div>
+      </div>
+    </section>
 
-          </div>
+  </main>
 
-          <div class="modal-actions">
 
-            <button type="button" id="cancel-delete-button">
-              Cancel
-            </button>
 
-            <button type="button" id="confirm-delete-button">
-              Delete
-            </button>
+  <!-- ========================= Create Popup ========================== -->
 
-          </div>
+  <div class="modal-overlay" id="create-folder-modal">
+
+    <div class="modal">
+
+      <div class="modal-header">
+        <h2 id="folder-modal-title">Create Folder</h2>
+
+        <button type="button" id="close-folder-modal">
+          ×
+        </button>
+      </div>
+
+      <form id="create-folder-form">
+
+        <div class="form-group">
+          <label for="folder-name">Folder name</label>
+
+          <input type="text" id="folder-name" name="folder_name" placeholder="Enter folder name" autocomplete="off"
+            required>
+        </div>
+
+        <div class="modal-actions">
+
+          <button type="button" id="cancel-folder-button">
+            Cancel
+          </button>
+
+          <button type="submit" id="submit-folder-name">
+            Create
+          </button>
 
         </div>
 
-      </div>
+      </form>
 
-      <!-- ========================= COPY DIALOG ========================== -->
-
-      <div id="copy-dialog" class="copy-dialog">
-
-        <div class="copy-window">
-
-          <!-- Header -->
-          <div class="copy-header">
-
-            <h2>Copy to</h2>
-
-            <button type="button" id="close-copy-dialog" class="copy-close-button">
-              ×
-            </button>
-
-          </div>
-
-
-          <!-- Navigation -->
-          <div class="copy-navigation">
-
-            <button type="button" id="copy-back-button" class="copy-back-button">
-
-              <span class="material-symbols-rounded">
-                arrow_back
-              </span>
-
-            </button>
-
-
-            <div id="copy-breadcrumb" class="copy-breadcrumb">
-
-              <!-- JavaScript creates breadcrumb here -->
-
-            </div>
-
-          </div>
-
-
-          <!-- Folder list -->
-          <div id="copy-folder-list" class="copy-folder-list">
-
-            <!-- JavaScript creates folders here -->
-
-          </div>
-
-
-          <!-- Bottom actions -->
-          <div class="copy-actions">
-
-            <button type="button" id="cancel-copy" class="copy-cancel-button">
-              Cancel
-            </button>
-
-            <button type="button" id="confirm-copy" class="copy-confirm-button">
-              Copy
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <!-- ========================= MOVE DIALOG ========================== -->
-
-      <div id="move-dialog" class="move-dialog">
-
-        <div class="move-window">
-
-          <!-- Header -->
-          <div class="move-header">
-
-            <h2>Move to</h2>
-
-            <button type="button" id="close-move-dialog" class="move-close-button">
-              ×
-            </button>
-
-          </div>
-
-
-          <!-- Navigation -->
-          <div class="move-navigation">
-
-            <button type="button" id="move-back-button" class="move-back-button">
-
-              <span class="material-symbols-rounded">
-                arrow_back
-              </span>
-
-            </button>
-
-
-            <div id="move-breadcrumb" class="move-breadcrumb">
-
-              <!-- JavaScript creates breadcrumb here -->
-
-            </div>
-
-          </div>
-
-
-          <!-- Folder list -->
-          <div id="move-folder-list" class="move-folder-list">
-
-            <!-- JavaScript creates folders here -->
-
-          </div>
-
-
-          <!-- Actions -->
-          <div class="move-actions">
-
-            <button type="button" id="cancel-move" class="move-cancel-button">
-              Cancel
-            </button>
-
-            <button type="button" id="confirm-move" class="move-confirm-button">
-              Move Here
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ========================= FOLDER CONTEXT MENU ========================== -->
-
-      <div id="folder-context-menu" class="context-menu">
-
-        <button id="open-folder">
-          <span class="material-symbols-rounded"> folder_open </span>
-          Open
-        </button>
-
-        <button id="rename-folder">
-          <span class="material-symbols-rounded"> drive_file_rename </span>
-          Rename
-        </button>
-
-        <button id="copy-folder">
-          <span class="material-symbols-rounded"> folder_copy </span>
-          Copy
-        </button>
-
-        <button id="move-folder">
-          <span class="material-symbols-rounded"> drive_file_move </span>
-          Move
-        </button>
-
-        <div class="context-divider"></div>
-
-        <button id="delete-folder">
-          <span class="material-symbols-rounded"> delete </span>
-          Delete
-        </button>
-
-      </div>
-
-      <!-- ========================= FILE CONTEXT MENU ========================== -->
-
-      <div id="file-context-menu" class="context-menu">
-
-        <button id="download-file">
-          <span class="material-symbols-rounded"> download </span>
-          Download
-        </button>
-
-        <button id="rename-file">
-          <span class="material-symbols-rounded"> drive_file_rename </span>
-          Rename
-        </button>
-
-        <button id="copy-file">
-          <span class="material-symbols-rounded"> file_copy </span>
-          Copy
-        </button>
-
-        <button id="move-file">
-          <span class="material-symbols-rounded"> drive_file_move </span>
-          Move
-        </button>
-
-        <div class="context-divider"></div>
-
-        <button id="delete-file">
-          <span class="material-symbols-rounded"> delete </span>
-          Delete
-        </button>
-
-      </div>
-
-    </main>
+    </div>
 
   </div>
-  <script src="{{ url_for('static', filename='js/code.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/runner.js') }}"></script>
-  <script>
 
-    // side menu animation
+  <!-- ========================= Confirm Popup ========================== -->
+
+  <div class="modal-overlay" id="delete-confirm-modal">
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <h2>Delete Folder</h2>
+
+        <button type="button" id="close-delete-modal">
+          ×
+        </button>
+
+      </div>
+
+      <div class="delete-confirm-content">
+
+        <p id="delete-confirm-message">
+          Are you sure you want to delete this folder?
+        </p>
+
+        <p class="delete-warning">
+          Everything inside this folder will also be deleted.
+        </p>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button type="button" id="cancel-delete-button">
+          Cancel
+        </button>
+
+        <button type="button" id="confirm-delete-button">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================= FOLDER CONTEXT MENU ========================== -->
+
+  <div id="folder-context-menu" class="context-menu">
+
+    <button id="open-folder">
+      <span class="material-symbols-rounded"> folder_open </span>
+      Open
+    </button>
+
+    <button id="rename-folder">
+      <span class="material-symbols-rounded"> drive_file_rename </span>
+      Rename
+    </button>
+
+    <button id="copy-folder">
+      <span class="material-symbols-rounded"> folder_copy </span>
+      Copy
+    </button>
+
+    <button id="move-folder">
+      <span class="material-symbols-rounded"> drive_file_move </span>
+      Move
+    </button>
+
+    <div class="context-divider"></div>
+
+    <button id="delete-folder">
+      <span class="material-symbols-rounded"> delete </span>
+      Delete
+    </button>
+
+  </div>
+
+  <!-- ========================= FILE CONTEXT MENU ========================== -->
+
+  <div id="file-context-menu" class="context-menu">
+
+    <button id="download-file">
+      <span class="material-symbols-rounded"> download </span>
+      Download
+    </button>
+
+    <button id="rename-file">
+      <span class="material-symbols-rounded"> drive_file_rename </span>
+      Rename
+    </button>
+
+    <button id="copy-file">
+      <span class="material-symbols-rounded"> file_copy </span>
+      Copy
+    </button>
+
+    <button id="move-file">
+      <span class="material-symbols-rounded"> drive_file_move </span>
+      Move
+    </button>
+
+    <div class="context-divider"></div>
+
+    <button id="delete-file">
+      <span class="material-symbols-rounded"> delete </span>
+      Delete
+    </button>
+
+  </div>
+
+  <!-- ========================= COPY DIALOG ========================== -->
+
+  <div id="copy-dialog" class="copy-dialog">
+
+    <div class="copy-window">
+
+      <!-- Header -->
+      <div class="copy-header">
+
+        <h2>Copy to</h2>
+
+        <button type="button" id="close-copy-dialog" class="copy-close-button">
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Navigation -->
+      <div class="copy-navigation">
+
+        <button type="button" id="copy-back-button" class="copy-back-button">
+
+          <span class="material-symbols-rounded">
+            arrow_back
+          </span>
+
+        </button>
+
+
+        <div id="copy-breadcrumb" class="copy-breadcrumb">
+
+          <!-- JavaScript creates breadcrumb here -->
+
+        </div>
+
+      </div>
+
+
+      <!-- Folder list -->
+      <div id="copy-folder-list" class="copy-folder-list">
+
+        <!-- JavaScript creates folders here -->
+
+      </div>
+
+
+      <!-- Bottom actions -->
+      <div class="copy-actions">
+
+        <button type="button" id="cancel-copy" class="copy-cancel-button">
+          Cancel
+        </button>
+
+        <button type="button" id="confirm-copy" class="copy-confirm-button">
+          Copy
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ========================= MOVE DIALOG ========================== -->
+
+  <div id="move-dialog" class="move-dialog">
+
+    <div class="move-window">
+
+      <!-- Header -->
+      <div class="move-header">
+
+        <h2>Move to</h2>
+
+        <button type="button" id="close-move-dialog" class="move-close-button">
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- Navigation -->
+      <div class="move-navigation">
+
+        <button type="button" id="move-back-button" class="move-back-button">
+
+          <span class="material-symbols-rounded">
+            arrow_back
+          </span>
+
+        </button>
+
+
+        <div id="move-breadcrumb" class="move-breadcrumb">
+
+          <!-- JavaScript creates breadcrumb here -->
+
+        </div>
+
+      </div>
+
+
+      <!-- Folder list -->
+      <div id="move-folder-list" class="move-folder-list">
+
+        <!-- JavaScript creates folders here -->
+
+      </div>
+
+
+      <!-- Actions -->
+      <div class="move-actions">
+
+        <button type="button" id="cancel-move" class="move-cancel-button">
+          Cancel
+        </button>
+
+        <button type="button" id="confirm-move" class="move-confirm-button">
+          Move Here
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script src="{{ url_for('static', filename='js/code.js') }}"></script>
+  <script>
+    ////////////////////////////////////////////////////////////////////////////
     const app = document.querySelector(".app");
     const toggleButton = document.querySelector("#menu-button");
 
@@ -2527,60 +476,42 @@
       localStorage.setItem("sidebarCollapsed", isCollapsed);
     });
 
-    // menu display content page
-    const menuItems = document.querySelectorAll(".menu-item");
-    const pages = document.querySelectorAll(".page-content");
+    ////////////////////////////////////////////////////////////////////////////
+    //add button menu
+    const addButton = document.getElementById("add-button");
 
-    menuItems.forEach(button => {
+    const addMenu = document.getElementById("add-menu");
 
-      button.addEventListener("click", () => {
+    /*
+        Open / close New menu
+    */
+    addButton.addEventListener("click", (event) => {
 
-        const pageName = button.dataset.page;
+      event.stopPropagation();
 
-        menuItems.forEach(item => {
-          item.classList.remove("active");
-        });
+      addMenu.style.position = "";
+      addMenu.style.left = "";
+      addMenu.style.top = "";
 
-        button.classList.add("active");
-
-        pages.forEach(page => {
-          page.classList.remove("active");
-        });
-
-        document.querySelector(`#${pageName}`).classList.add("active");
-
-      });
+      addMenu.classList.toggle("open");
 
     });
 
-    // menu display content page save on localy
-    const savedPage = localStorage.getItem("selectedPage");
+    /*
+        Close menu when clicking outside
+    */
+    document.addEventListener("click", (event) => {
 
-    if (savedPage) {
+      if (!addMenu.contains(event.target) &&
+        !addButton.contains(event.target)) {
 
-      const savedButton = document.querySelector(
-        `.menu-item[data-page="${savedPage}"]`
-      );
+        addMenu.classList.remove("open");
 
-      const savedContent = document.querySelector(
-        `#${savedPage}`
-      );
-
-      if (savedButton && savedContent) {
-
-        menuItems.forEach(item => {
-          item.classList.remove("active");
-        });
-
-        pages.forEach(page => {
-          page.classList.remove("active");
-        });
-
-        savedButton.classList.add("active");
-
-        savedContent.classList.add("active");
       }
-    }
+
+    });
+
+    ////////////////////////////////////////////////////////////////////////////
 
     // account menu open
     const accountButton = document.querySelector("#account-button");
@@ -2592,12 +523,49 @@
 
     document.addEventListener("click", (event) => {
 
-      if (!event.target.closest(".account-wrapper")) {
+      if (!accountMenu.contains(event.target) &&
+        !accountButton.contains(event.target)) {
+
         accountMenu.classList.remove("open");
+
       }
 
     });
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    const messageContainer = document.querySelector("#message-container");
+
+    function showMessage(message, type = "success") {
+      const messageBox = document.createElement("div");
+      messageBox.className = `form-message ${type}`;
+
+      const messageText = document.createElement("span");
+      messageText.className = "message-text";
+      messageText.textContent = message;
+
+      const closeButton = document.createElement("button");
+      closeButton.className = "message-close";
+      closeButton.type = "button";
+      closeButton.textContent = "×";
+      closeButton.setAttribute("aria-label", "Close notification");
+
+      messageBox.append(messageText, closeButton);
+      messageContainer.appendChild(messageBox);
+
+      let messageTimer;
+
+      function removeMessage() {
+        clearTimeout(messageTimer);
+        messageBox.remove();
+      }
+
+      closeButton.addEventListener("click", removeMessage);
+
+      messageTimer = setTimeout(removeMessage, 5000);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     //popup menu 
     const closeFolderModal =
@@ -2637,66 +605,7 @@
 
     });
 
-    //messageer
-    const messageBox = document.querySelector("#form-message");
-    const messageText = document.querySelector("#message-text");
-    const closeButton = document.querySelector("#message-close");
-
-    function showMessage(message, type) {
-
-      messageText.textContent = message;
-
-      messageBox.className = type;
-
-      setTimeout(() => {
-        messageBox.className = "";
-      }, 5000);
-
-    }
-
-    closeButton.addEventListener("click", () => {
-
-      messageBox.className = "";
-
-    });
-
-
-    //add button menu
-    const addButton = document.getElementById("add-button");
-
-    const addMenu = document.getElementById("add-menu");
-
-    /*
-        Open / close New menu
-    */
-    addButton.addEventListener("click", (event) => {
-
-      event.stopPropagation();
-
-      addMenu.style.position = "";
-      addMenu.style.left = "";
-      addMenu.style.top = "";
-
-      addMenu.classList.toggle("open");
-
-    });
-
-
-    /*
-        Close menu when clicking outside
-    */
-    document.addEventListener("click", (event) => {
-
-      if (!addMenu.contains(event.target) &&
-        !addButton.contains(event.target)) {
-
-        addMenu.classList.remove("open");
-
-      }
-
-    });
-
-// Copy and Move dialogs have their own close buttons
+    ////////////////////////////////////////////////////////////////////////////
 
     const closeCopyDialog =
       document.getElementById("close-copy-dialog");
@@ -2715,6 +624,47 @@
         document.getElementById("move-dialog").style.display = "none";
       });
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    const themeToggle = document.querySelector("#theme-toggle");
+    const themeIcon = document.querySelector("#theme-icon");
+    const themeLabel = document.querySelector("#theme-label");
+
+    // Read the saved theme, or use light mode by default.
+    let currentTheme = localStorage.getItem("theme") || "light";
+
+    // Apply the selected theme.
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+
+      currentTheme = theme;
+
+      // Update the button to show the opposite action.
+      if (theme === "dark") {
+        themeIcon.textContent = "light_mode";
+        themeLabel.textContent = "Light mode";
+        themeToggle.setAttribute("aria-label", "Switch to light theme");
+      } else {
+        themeIcon.textContent = "dark_mode";
+        themeLabel.textContent = "Dark mode";
+        themeToggle.setAttribute("aria-label", "Switch to dark theme");
+      }
+
+      // Remember the selection.
+      localStorage.setItem("theme", theme);
+    }
+
+    // Apply the saved theme when the page loads.
+    applyTheme(currentTheme);
+
+    // Toggle between light and dark when clicked.
+    themeToggle.addEventListener("click", () => {
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+
+      applyTheme(newTheme);
+    });
+
 
   </script>
 </body>
