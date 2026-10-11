@@ -1,6 +1,8 @@
-# Aerial Cloud
+# Cloud Project
 
 A cloud-drive web application built with Flask, SQLAlchemy, SQLite, HTML, CSS and JavaScript.
+
+![image alt] (https://github.com/mssoorajsivadas/Cloud-Project/blob/d3d3db66b7911bba0bd18e2dab8b74fe01488e40/app.jpg)
 
 ## Current Features
 
