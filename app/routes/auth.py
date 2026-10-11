@@ -112,6 +112,7 @@ def login():
     response.set_cookie(
         "session_token",
         session_token,
+        max_age=7 * 24 * 60 * 60,
         httponly=True,
         secure=False,
         samesite="Lax"
